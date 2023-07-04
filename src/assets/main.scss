@@ -1,0 +1,14 @@
+@import './base.css';
+@import 'transition';
+@import 'scroll';
+
+
+body {
+  display: flex;
+}
+#app {
+  font-weight: normal;
+  width: 100%;
+}
+@include transition;
+@include scroll;

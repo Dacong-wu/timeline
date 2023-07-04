@@ -3,14 +3,12 @@ import { ref, onMounted } from 'vue'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 gsap.registerPlugin(ScrollTrigger)
-const element = ref(null)
 onMounted(() => {
   gsap.utils.toArray('.comparisonSection').forEach(section => {
     let tl = gsap.timeline({
       scrollTrigger: {
         trigger: section,
         start: 'center center',
-        // makes the height of the scrolling (while pinning) match the width, thus the speed remains constant (vertical/horizontal)
         end: () => '+=' + section.offsetWidth,
         scrub: true,
         pin: true,
@@ -61,7 +59,7 @@ onMounted(() => {
 <style lang="scss" scoped>
 .body {
   height: 300vh;
-  width: 100vw;
+  width: 100%;
   background-color: #111;
   color: white;
   overflow-x: hidden;
@@ -69,7 +67,6 @@ onMounted(() => {
 
 h1,
 h2 {
-  height: 500px;
   font-weight: 400;
   max-width: none;
 }
@@ -92,7 +89,7 @@ h2 {
   transform: translate(-100%, 0px);
 }
 .comparisonImage img {
-  width: 100%;
+  // width: 100%;
   height: 100%;
   position: absolute;
   top: 0;
