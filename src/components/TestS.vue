@@ -1,11 +1,42 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { onMounted } from 'vue'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
+import ScrollSmoother from 'gsap/ScrollSmoother'
 
-gsap.registerPlugin(ScrollTrigger)
+gsap.registerPlugin(ScrollTrigger, ScrollSmoother)
 onMounted(() => {
-  /* Fade in the logo */
+  fromToClassLogo()
+  let scrollTl = scrollTimeline()
+  let smoother = ScrollSmoother.create({
+    wrapper: '#wrapper',
+    content: '#content',
+    smooth: 1,
+    effects: true
+  })
+
+  smoother.effects('.image', {
+    speed: i => {
+      // Desktop three columns layout
+      if (window.matchMedia('(min-width:730px)').matches) {
+        // Center column is faster
+        return i % 3 === 1 ? 1.15 : 1
+      } else {
+        // Mobile, right column is fast
+        return i % 2 === 0 ? 1 : 1.15
+      }
+    }
+  })
+  scrollTlFromToClassLogo(scrollTl)
+  scrollTlFromToElementHeader(scrollTl)
+})
+
+// logo元素进场动画
+function fromToClassLogo() {
+  /*
+    .in：表示缓动函数的进入阶段，即动画开始时的缓动效果。
+    .out：表示缓动函数的离开阶段，即动画结束时的缓动效果。
+  */
   gsap.fromTo(
     '.logo',
     {
@@ -19,33 +50,53 @@ onMounted(() => {
       ease: 'power3.out'
     }
   )
+}
 
-  /* Logo to header animation */
-  let logoTl = gsap.timeline({
+// 创建滚动时间轴动画
+function scrollTimeline() {
+  /*
+  trigger 属性指定了触发动画的元素，这里使用的是 document.body，即整个文档的 body 元素。
+  start 属性指定了动画开始的位置，这里设置为 0，表示当滚动到页面顶部时开始触发动画。
+  end 属性指定了动画结束的位置，这里使用一个函数 () => window.innerHeight * 1.2，表示当滚动到窗口高度的 1.2 倍时结束动画。这样可以设置一个结束点，使动画不会无限地继续播放。
+  scrub 属性指定了动画的平滑度，这里设置为 0.6，表示在滚动过程中动画的播放速度相对于滚动速度的 0.6 倍，可以实现一种平滑的效果。
+  */
+  return gsap.timeline({
     scrollTrigger: {
       trigger: document.body,
       start: 0,
-      end: () => window.innerHeight * 1.2,
-      scrub: 0.6
+      end: () => window.innerHeight * 1.5,
+      scrub: 0.8
     }
   })
-  logoTl.fromTo(
-    '.logo',
-    {
-      top: '50vh',
-      yPercent: -50,
-      scale: 4,
-      textShadow: '0 0 2px rgba(0,0,0,0.3)'
-    },
-    {
-      top: 0,
-      yPercent: 0,
-      scale: 1,
-      textShadow: '0 0 2px rgba(0,0,0,0)',
-      duration: 0.8
-    }
-  )
-  logoTl.fromTo(
+}
+
+// logo 滚动动画
+function scrollTlFromToClassLogo(scrollTl) {
+  let from = {
+    top: '50vh',
+    yPercent: -50,
+    scale: 4,
+    textShadow: '0 0 2px rgba(0,0,0,0.3)'
+  }
+  let to = {
+    top: 0,
+    yPercent: 0,
+    scale: 1,
+    textShadow: '0 0 2px rgba(0,0,0,0)',
+    duration: 0.8
+  }
+  // 移动端适配更改
+  if (window.matchMedia('(max-width: 576px)').matches) {
+    from.rotation = 90
+    from.scale = 2
+    to.rotation = 0
+  }
+  scrollTl.fromTo('.logo', from, to)
+}
+
+// header 滚动动画
+function scrollTlFromToElementHeader(scrollTl) {
+  scrollTl.fromTo(
     'header',
     {
       boxShadow: '0px 0px 10px rgba(0,0,0,0)'
@@ -53,38 +104,13 @@ onMounted(() => {
     {
       boxShadow: '0px 0px 10px rgba(0,0,0,.15)',
       duration: 0.2
-    },
-    0.8
+    }
   )
-
-  /* That's all Folks animation */
-  let endTl = gsap.timeline({
-    repeat: -1,
-    delay: 0.5,
-    scrollTrigger: {
-      trigger: '.end',
-      start: 'bottom 100%-=50px'
-    }
-  })
-  gsap.set('.end', {
-    opacity: 0
-  })
-  gsap.to('.end', {
-    opacity: 1,
-    duration: 1,
-    ease: 'power2.out',
-    scrollTrigger: {
-      trigger: '.end',
-      start: 'bottom 100%-=50px',
-      once: true
-    }
-  })
-})
+}
 </script>
 <template>
-  <div class="body">
+  <div class="gasp-body">
     <header>
-      <!-- <h1 class="logo">Simba</h1> -->
       <div class="logo">
         <TitleDay1999 />
       </div>
@@ -204,80 +230,69 @@ onMounted(() => {
             />
           </li>
         </ul>
-        <footer>
+        <!-- <footer>
           <h2 class="end">That's all folks</h2>
-        </footer>
+        </footer> -->
       </div>
     </main>
   </div>
 </template>
 <style lang="scss" scoped>
-* {
-  box-sizing: border-box;
-}
-html {
-  font-size: 62.5%;
-}
-.body {
-  font-size: 1.6rem;
-  background: #fff5da;
-  font-family: 'Luckiest Guy', cursive;
-}
-img {
-  width: 100%;
-}
-header {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 100%;
-  padding: 2.3rem 0 0.5rem;
-  background: #fff5da;
-  z-index: 1;
-  height: 77px;
-}
-.logo {
-  text-align: center;
-  position: absolute;
-  top: 0;
-  width: 100%;
-  color: #f47340;
-  text-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
-}
-
-.o-wrapper {
-  padding: 0 2rem;
-  @media (min-width: 730px) {
+$primary-color: #fff5da;
+$logo-height: 77px;
+.gasp-body {
+  header {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background: $primary-color;
+    height: $logo-height;
+    z-index: 1;
+    .logo {
+      text-align: center;
+      position: absolute;
+      top: 0;
+      width: 100%;
+      text-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+    }
+  }
+  .o-wrapper {
     padding: 0 10%;
-  }
-}
-.gallery {
-  padding-top: 150vh;
-  display: grid;
-  list-style-type: none;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 2rem;
-  @media (min-width: 730px) {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-.image {
-  aspect-ratio: 2 / 3;
-  img {
-    height: 100%;
-    object-fit: cover;
+    background: $primary-color;
+    @media #{$phone} {
+      padding: 0 2rem;
+    }
+    .gallery {
+      padding-top: 150vh;
+      padding-left: 0;
+      display: grid;
+      list-style-type: none; //用于设置列表项（<li> 元素）的标志样式
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 2rem;
+      @media #{$phone} {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+      }
+      @media #{$pad} {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .image {
+        aspect-ratio: 2 / 3;
+        img {
+          height: 100%;
+          width: 100%;
+          object-fit: cover;
+        }
+      }
+    }
   }
 }
 
 footer {
-  margin-top: 10rem;
+  margin-top: 5rem;
   text-align: center;
   font-size: 6vw;
   letter-spacing: 0.1em;
-  padding-bottom: 20rem;
-  @media (min-width: 730px) {
-    margin-top: 20rem;
-    padding-bottom: 20rem;
-  }
+  padding-bottom: 5rem;
 }
 </style>
