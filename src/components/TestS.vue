@@ -2,31 +2,12 @@
 import { onMounted } from 'vue'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
-import ScrollSmoother from 'gsap-trial/ScrollSmoother'
+// import ScrollSmoother from 'gsap/ScrollSmoother'
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother)
 onMounted(() => {
   fromToClassLogo()
   let scrollTl = scrollTimeline()
-  let smoother = ScrollSmoother.create({
-    wrapper: '#wrapper',
-    content: '#content',
-    smooth: 1,
-    effects: true
-  })
-
-  smoother.effects('.image', {
-    speed: i => {
-      // Desktop three columns layout
-      if (window.matchMedia('(min-width:730px)').matches) {
-        // Center column is faster
-        return i % 3 === 1 ? 1.15 : 1
-      } else {
-        // Mobile, right column is fast
-        return i % 2 === 0 ? 1 : 1.15
-      }
-    }
-  })
   scrollTlFromToClassLogo(scrollTl)
   scrollTlFromToElementHeader(scrollTl)
 })
@@ -74,7 +55,6 @@ function scrollTimeline() {
 function scrollTlFromToClassLogo(scrollTl) {
   let from = {
     top: '50vh',
-    yPercent: -50,
     scale: 4,
     textShadow: '0 0 2px rgba(0,0,0,0.3)'
   }
