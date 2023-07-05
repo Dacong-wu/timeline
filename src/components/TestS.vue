@@ -2,7 +2,7 @@
 import { onMounted } from 'vue'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
-import ScrollSmoother from 'gsap/ScrollSmoother'
+import ScrollSmoother from 'gsap-trial/ScrollSmoother'
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother)
 onMounted(() => {
