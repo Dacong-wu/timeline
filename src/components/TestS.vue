@@ -4,8 +4,8 @@ import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 // import ScrollSmoother from 'gsap/ScrollSmoother'
 
-gsap.registerPlugin(ScrollTrigger)
 onMounted(() => {
+  gsap.registerPlugin(ScrollTrigger)
   fromToClassLogo()
   let scrollTl = scrollTimeline()
   scrollTlFromToClassLogo(scrollTl)
@@ -22,10 +22,10 @@ function fromToClassLogo() {
     '.logo',
     {
       opacity: 0,
-      yPercent: 50
+      yPercent: 100
     },
     {
-      yPercent: -50,
+      yPercent: 0,
       opacity: 1,
       duration: 1,
       ease: 'power3.out'
@@ -43,7 +43,7 @@ function scrollTimeline() {
   */
   return gsap.timeline({
     scrollTrigger: {
-      trigger: document.body,
+      trigger: '.gasp-body',
       start: 0,
       end: () => window.innerHeight * 1.5,
       scrub: 0.8
@@ -54,13 +54,12 @@ function scrollTimeline() {
 // logo 滚动动画
 function scrollTlFromToClassLogo(scrollTl) {
   let from = {
-    top: '50vh',
+    top: 'calc(50vh - 77px)',
     scale: 4,
     textShadow: '0 0 2px rgba(0,0,0,0.3)'
   }
   let to = {
-    top: 0,
-    yPercent: 0,
+    top: 'calc(0vh - 0px)',
     scale: 1,
     textShadow: '0 0 2px rgba(0,0,0,0)',
     duration: 0.8
@@ -210,9 +209,6 @@ function scrollTlFromToElementHeader(scrollTl) {
             />
           </li>
         </ul>
-        <!-- <footer>
-          <h2 class="end">That's all folks</h2>
-        </footer> -->
       </div>
     </main>
   </div>
@@ -231,7 +227,7 @@ $logo-height: 77px;
     z-index: 1;
     .logo {
       text-align: center;
-      position: absolute;
+      position: relative;
       top: 0;
       width: 100%;
       text-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
@@ -266,13 +262,5 @@ $logo-height: 77px;
       }
     }
   }
-}
-
-footer {
-  margin-top: 5rem;
-  text-align: center;
-  font-size: 6vw;
-  letter-spacing: 0.1em;
-  padding-bottom: 5rem;
 }
 </style>
