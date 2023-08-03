@@ -2,13 +2,20 @@
 @import 'transition';
 @import 'scroll';
 
-
 body {
   display: flex;
+}
+@font-face {
+  font-family: 'CustomFont';
+  src: url('./fonts/8417.ttf') format('truetype');
+}
+a{
+  text-decoration: none;
 }
 #app {
   font-weight: normal;
   width: 100%;
+  font-family: 'CustomFont';
 }
 @include transition;
 @include scroll;

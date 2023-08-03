@@ -2,13 +2,69 @@
 import { onMounted } from 'vue'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
+// import ScrollSmoother from 'gsap/ScrollSmoother'
+
+const info = [
+  {
+    name: 'p-1',
+    value: '💖2018-0215→2023-0806💖'
+  },
+  {
+    name: 'p-2',
+    value: '时间过的太快啦🚀'
+  },
+  {
+    name: 'p-3',
+    value: '一眨眼都在一起1999天了🌼'
+  },
+  {
+    name: 'p-4',
+    value: '换算一下就是5.4年🧏‍♀️'
+  },
+  {
+    name: 'p-5',
+    value: '今天该怎么庆祝呢🎉'
+  },
+  {
+    name: 'p-6',
+    value: '想来想去，这么好的日子🌝'
+  },
+  {
+    name: 'p-7',
+    value: '一般活动都有点配不上🫨'
+  },
+  {
+    name: 'p-8',
+    value: '1999，长长久久🐣'
+  },
+  {
+    name: 'p-9',
+    value: '要不求婚吧🌈'
+  },
+  {
+    name: 'p-10',
+    value: '所以你现在看到了这个网址🐥'
+  },
+  {
+    name: 'p-11',
+    value: '很庆幸，他没有被注册🌺'
+  },
+  {
+    name: 'p-12',
+    value: '让这一刻在互联网上定格吧📸'
+  },
+  {
+    name: 'p-13',
+    value: '美美丽的小莉莉，嫁给我吧💍'
+  }
+]
 
 onMounted(() => {
-  gsap.registerPlugin(ScrollTrigger)
-  fromToClassLogo()
-  let scrollTl = scrollTimeline()
-  scrollTlFromToClassLogo(scrollTl)
-  scrollTlFromToElementHeader(scrollTl)
+  gsap.registerPlugin(ScrollTrigger) //注册插件
+  fromToClassLogo() //logo元素进场动画
+  let scrollTl = scrollTimeline() //创建时间轴对象
+  scrollTlFromToClassLogo(scrollTl) //Logo滚动动画
+  scrollTlFromToClassP1()
 })
 
 // logo元素进场动画
@@ -44,7 +100,7 @@ function scrollTimeline() {
     scrollTrigger: {
       trigger: '.gasp-body',
       start: 0,
-      end: () => window.innerHeight * 1.5,
+      end: () => window.innerHeight,
       scrub: 0.8
     }
   })
@@ -58,10 +114,11 @@ function scrollTlFromToClassLogo(scrollTl) {
     textShadow: '0 0 2px rgba(0,0,0,0.3)'
   }
   let to = {
-    top: 'calc(0vh - 0px)',
+    // top: 'calc(0vh - 0px)',
+    opacity: 0,
     scale: 1,
     textShadow: '0 0 2px rgba(0,0,0,0)',
-    duration: 0.8
+    duration: 1
   }
   // 移动端适配更改
   if (window.matchMedia('(max-width: 576px)').matches) {
@@ -69,21 +126,33 @@ function scrollTlFromToClassLogo(scrollTl) {
     from.scale = 2
     to.rotation = 0
   }
-  scrollTl.fromTo('.logo', from, to)
+  scrollTl.fromTo('.logo', from, to).set('.logo', { top: 'calc(0vh - 0px)' })
+  scrollTl.fromTo('.logo', { opacity: 0 }, { opacity: 1 })
 }
 
-// header 滚动动画
-function scrollTlFromToElementHeader(scrollTl) {
-  scrollTl.fromTo(
-    'header',
-    {
-      boxShadow: '0px 0px 10px rgba(0,0,0,0)'
-    },
-    {
-      boxShadow: '0px 0px 10px rgba(0,0,0,.15)',
-      duration: 0.2
-    }
-  )
+function scrollTlFromToClassP1() {
+  for (let i = 0, len = info.length; i < len; i++) {
+    let item = info[i].name
+    let percent = (50 / len) * i
+    gsap.from(`.${item}`, {
+      scale: 0.5,
+      rotate: 10,
+      filter: 'blur(4px)',
+      opacity: 0,
+      scrollTrigger: {
+        trigger: `.${item}`,
+        start: getStart(item),
+        end: `bottom ${percent + 50}%`,
+        scrub: 0.8
+        // markers: true
+      }
+    })
+  }
+}
+function getStart(name) {
+  let height = window.innerHeight
+  let start = document.getElementsByClassName(name)[0].offsetTop - height
+  return start
 }
 </script>
 <template>
@@ -94,24 +163,45 @@ function scrollTlFromToElementHeader(scrollTl) {
       </div>
     </header>
     <main>
-      
+      <div class="gallery">
+        <p
+          v-for="item in info"
+          :key="item.name"
+          class="p-all"
+          :class="item.name"
+          >{{ item.value }}</p
+        >
+      </div>
     </main>
+    <footer class="">
+      <span>
+        <a
+          target="_blank"
+          href="https://beian.miit.gov.cn/#/Integrated/index"
+        >
+          <p>苏ICP备2021045936号-2</p>
+        </a>
+      </span>
+    </footer>
   </div>
 </template>
 <style lang="scss" scoped>
-$primary-color: #fff5da;
+$primary-back-color: #fff5da;
 $logo-height: 77px;
+
 .gasp-body {
   min-height: 100vh;
-  background-color: $primary-color;
+  background-color: $primary-back-color;
+
   header {
     position: fixed;
     left: 0;
     top: 0;
     width: 100%;
-    background: $primary-color;
+    background: $primary-back-color;
     height: $logo-height;
     z-index: 1;
+
     .logo {
       text-align: center;
       position: relative;
@@ -120,33 +210,46 @@ $logo-height: 77px;
       text-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
     }
   }
-  .main {
+
+  main {
     padding: 0 10%;
     @media #{$phone} {
       padding: 0 2rem;
     }
+
     .gallery {
-      padding-top: 150vh;
+      color: $primary-color;
+      padding-top: 100vh;
+      padding-bottom: 5vh;
       padding-left: 0;
-      display: grid;
-      list-style-type: none; //用于设置列表项（<li> 元素）的标志样式
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 2rem;
-      @media #{$phone} {
-        grid-template-columns: repeat(1, minmax(0, 1fr));
-      }
-      @media #{$pad} {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-      .image {
-        aspect-ratio: 2 / 3;
-        img {
-          height: 100%;
-          width: 100%;
-          object-fit: cover;
+      .p-all {
+        font-size: 60px;
+        width: 100%;
+        text-align: center;
+        @media #{$phone} {
+          font-size: 30px;
         }
       }
     }
   }
+
+  footer{
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  padding-bottom: env(safe-area-inset-bottom);
+  span {
+    padding: 0 5px;
+  }
+  p {
+    color: $primary-color;
+    font-size: 12px;
+    margin: 0;
+    padding: 10px 0;
+  }
+}
+
 }
 </style>
