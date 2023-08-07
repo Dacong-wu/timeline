@@ -7,7 +7,7 @@ import ScrollTrigger from 'gsap/ScrollTrigger'
 const info = [
   {
     name: 'p-1',
-    value: '💖2018-0215→2023-0806💖'
+    value: '💖2018-0215→2023-0807💖'
   },
   {
     name: 'p-2',
