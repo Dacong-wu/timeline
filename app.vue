@@ -2,13 +2,15 @@
   <Head>
     <Title>幸福记录🥰</Title>
   </Head>
-  <NuxtPage class="max-w-[1300px] m-auto px-2" />
+  <NuxtLayout>
+    <NuxtPage class="max-w-[1300px] m-auto px-2" />
+  </NuxtLayout>
 </template>
 
 <script setup>
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { ScrollSmoother } from 'gsap/dist/ScrollSmoother'
+import gsap from 'dacong-gsap'
+import { ScrollTrigger } from 'dacong-gsap/ScrollTrigger'
+import { ScrollSmoother } from 'dacong-gsap/dist/ScrollSmoother'
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger, ScrollSmoother)
 }
