@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-center my-20">
+  <div class="flex h-screen justify-center items-center">
     <div class="text-6xl font-bold text-red-500 flex items-center flex-wrap justify-center">
       <span class="text-8xl">2018</span>
       <span class="px-2">年</span>
