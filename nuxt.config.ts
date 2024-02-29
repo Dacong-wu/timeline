@@ -6,8 +6,5 @@ export default defineNuxtConfig({
       tailwindcss: {},
       autoprefixer: {}
     }
-  },
-  nitro: {
-    preset: 'cloudflare-pages'
   }
 })
